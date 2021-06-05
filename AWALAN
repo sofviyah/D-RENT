@@ -1,0 +1,142 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdbool.h>
+
+FILE *data;
+FILE *isi_data;
+void usermenu();
+void jadwal();
+void cekjadwal();
+void cekstatus();
+void adminmenu();
+void registrasi();
+void stokkendaraan();
+void loginuser();
+void loginadmin();
+void inputtanggal();
+void daftarsewa();
+void tambah();
+void pengembalian();
+int i,n,p,luser,ladmin,loginadminmenu;
+bool ceknampes(char nampes[100]);
+bool caripesan(char nampes[100]);
+struct
+{
+    char nama[100],username[100],pass[100],cari1[100],cari2[100],status[100],tang[100],wkt[100],merk[100];
+    char user[100],nam[100],alamat[100],telp[100],tgl[100],usernamea[100],passa[50];
+} daftar,logina;
+
+void main()
+{
+ulang:
+    system("cls");
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D' RENT");
+    puts("\t\t\t================================");
+    puts("1. Login Admin");
+    puts("2. Registrasi");
+    puts("3. Login User ");
+    puts("4. Exit");
+    printf("\n\nPilih Menu : ");
+    scanf("%d",&p);
+    fflush(stdin);
+    switch(p)
+    {
+    case 1:
+        loginadmin();
+        break;
+    case 2:
+        registrasi();
+        break;
+    case 3:
+        loginuser();
+        break;
+    case 4:
+        printf("Terima kasih, Selamat Datang Kembali\n");
+        break;
+    }
+}
+
+void loginadmin()
+{
+    system("cls");
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI DAS'RENT ");
+    puts("\t\t\t================================");
+    puts("\t\t\t\t Login Admin\n");
+    printf("username : ");
+    fflush(stdin);
+    gets(logina.usernamea);
+    printf("password : ");
+    fflush(stdin);
+    gets(logina.passa);
+    if(strcmp(logina.usernamea,"admin")==0&&strcmp(logina.passa,"1234")==0)
+    {
+        system("cls");
+        adminmenu();
+    }
+    else
+    {
+        system("cls");
+    }
+}
+
+void adminmenu()
+{
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D' RENT");
+    puts("\t\t\t================================");
+    puts("\t\t\t\t Selamat Datang Admin\n");
+    puts("1. Input Tanggal dan Stok");
+    puts("2. Lihat Daftar Penyewa");
+    puts("3. Cek Status Penyewa");
+    puts("4. Exit ");
+    printf("Pilihan : ");
+    scanf("%d",&loginadminmenu);
+    switch(loginadminmenu)
+    {
+    case 1:
+    {
+        inputtanggal();
+        break;
+    }
+    case 2:
+    {
+       daftarsewa();
+        break;
+    }
+    case 3:
+    {
+        cekstatus();
+        break;
+    }
+    case 4:
+    {
+        main();
+        break;
+    }
+
+    default :
+        printf ("Error!");
+    }
+}
+
+void inputtanggal()
+{
+    system("cls");
+    FILE *data;
+    data=fopen("tanggal.dat","wb");
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D' RENT");
+    puts("\t\t\t================================");
+    printf("Banyak Kendaraan  : "); scanf("%d",&n); getchar();
+	for(i=1;i<=n;i++){
+        printf("  %d. Jenis Mobil\t: ",i);gets(daftar.merk);
+		printf("      Waktu Sewa \t: "); gets(daftar.wkt);
+		printf("      Tanggal Sewa\t: "); gets(daftar.tang);
+		fwrite(&daftar, sizeof(daftar), 1, data);
+	}
+	fclose(data);system("pause");
+    system("cls");
+    adminmenu();
+}
