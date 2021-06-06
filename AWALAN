@@ -18,7 +18,7 @@ void daftarsewa();
 void tambah();
 void pengembalian();
 int i,n,p,luser,ladmin,loginadminmenu;
-bool ceknampes(char nampes[100]);
+bool ceknamse(char namse[100]);
 bool caripesan(char nampes[100]);
 struct
 {
@@ -61,7 +61,7 @@ void loginadmin()
 {
     system("cls");
     puts("\t\t\t================================");
-    puts("\t\t\t SELAMAT DATANG DI DAS'RENT ");
+    puts("\t\t\t SELAMAT DATANG DI D'RENT ");
     puts("\t\t\t================================");
     puts("\t\t\t\t Login Admin\n");
     printf("username : ");
@@ -139,4 +139,562 @@ void inputtanggal()
 	fclose(data);system("pause");
     system("cls");
     adminmenu();
+}
+
+
+void daftarsewa()
+{
+    system("cls");
+    char a,update[100];
+    FILE *data;
+    int i = 0;
+    data = fopen("sewaan.dat","r");
+    if(!data)
+    {
+        printf("Pesanan Belum ada \n");
+    }
+    else
+    {
+        puts("\t\t\t================================");
+        puts("\t\t\t SELAMAT DATANG DI D' RENT");
+        puts("\t\t\t================================");
+        puts("\t\t\t List Sewaan 2021\n"); ;
+        while(!feof(data))
+        {
+            i += 1;
+            printf("Sewa ke-%d\n",i);
+            fscanf(data,"%s", &daftar.merk);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.alamat);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.telp);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.tgl);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.user);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.nama);
+            fflush(stdin);
+
+            printf("Sewa kendaraan atas nama %s \n",daftar.nama);
+            printf("jenis Kendaraan	: %s\n", daftar.merk);
+            printf("Alamat	: %s\n", daftar.alamat);
+            printf("No Telp	: %s\n", daftar.telp);
+            printf("Tanggal	: %s\n", daftar	.tgl);
+
+            if(caristatus(daftar.merk)==1)
+            {
+                printf("Status : Sewa Selesai Tanggal  %d\n\n", daftar.tgl);
+            }
+            else
+            {
+                printf("Status : Sewa dalam Proses\n\n");
+            }
+
+
+
+            fscanf(data,"\n");
+            fflush(stdin);
+        }
+
+        fclose(data);
+
+        printf("Adakah Sewa yang Sudah Selesai (Y/N) : ");
+        fflush(stdin);
+        a=getchar();
+        if (a=='y' || a=='Y')
+        {
+            fflush(stdin);
+            printf("\nMasukkan Jenis Kendaran yang Ingin Kamu Update : ");
+            gets(daftar.merk);
+            fflush(stdin);
+            printf("Sewa Sudah Selesai (Y/N) : ");
+            fflush(stdin);
+            a=getchar();
+            if (a=='y' || a=='Y')
+            {
+                strcpy(daftar.status, "Sewa telah selesai");
+                printf("Status Telah Dikirim\n");
+                FILE *stat = fopen("status.dat","a");
+                if(!ceknamse(daftar.merk))
+                {
+                    if(caripesan(daftar.merk))
+                    {
+                        fprintf(stat,"%s#%s#\n",daftar.merk, daftar.status);
+                    }
+                    else
+                    {
+                        printf("Nama Pesan Tidak ada dalam list Barang\n");
+                    }
+                }
+                else
+                {
+                    printf("Nama Pesan memang sudah selesai\n");
+                }
+                fclose(stat);
+                fwrite(&daftar,sizeof(daftar),1,data);
+                fclose(data);
+                system("pause");
+                system("cls");
+                adminmenu();
+            }
+            else if (a=='n' || a=='N')
+            {
+                system("cls");
+                adminmenu();
+            }
+        }
+        else if (a=='n' || a=='N')
+        {
+            system("cls");
+            adminmenu();
+        }
+    }
+    fclose(data);
+    adminmenu();
+}
+
+bool ceknamse(char namse[100])
+{
+    FILE *in = fopen("status.dat","r");
+
+    bool ketemu = false;
+    char nam[100], status[100];
+
+    if(!in)
+    {
+        return ketemu;
+    }
+    else
+    {
+        while(!feof(in) && !ketemu)
+        {
+            fscanf(in,"%s", &nam);
+            fflush(stdin);
+            fscanf(in,"%s", &status);
+            fflush(stdin);
+
+            if(strcmp(nam,namse)==0)
+            {
+                ketemu = true;
+            }
+            fscanf(in,"\n");
+            fflush(stdin);
+        }
+    }
+    fclose(in);
+
+    return ketemu;
+}
+
+void cekstatus()
+{
+    system("cls");
+    FILE *data;
+    int i = 0;
+    data = fopen("sewaan.dat","r");
+    if(!data)
+    {
+        //Tidak ada data status
+    }
+    else
+    {
+        while(!feof(data))
+        {
+            fscanf(data,"%s", &daftar.merk);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.alamat);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.telp);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.tgl);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.user);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.nama);
+            fflush(stdin);
+
+            if(strcmp(daftar.cari1,daftar.user)==0)
+            {
+                i += 1;
+                printf("Sewa ke-%d\n",i);
+                printf("Jenis Kendaraan	: %s\n", daftar.merk);
+                printf("Alamat		: %s\n", daftar.alamat);
+                printf("No Telp		: %s\n", daftar.telp);
+                printf("Tanggal		: %s\n", daftar.tgl);
+
+                if(caristatus(daftar.merk)==1)
+                {
+                    printf("Status		: Sewa selesai Pada tanggal %d", daftar.tgl);
+                }
+                else
+                {
+                    printf("Status		: Sewa dalam Proses\n\n");
+                }
+            }
+
+            fscanf(data,"\n");
+            fflush(stdin);
+        }
+    }
+
+    fclose(data);
+    system("pause");
+    system("cls");
+    adminmenu();
+}
+
+void registrasi()
+{
+    system("cls");
+    data=fopen("save.dat","ab+");
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D' RENT");
+    puts("\t\t\t================================");
+    puts("\t\t\t\t Registrasi User");
+    printf("Nama\t : "),scanf("%[^\n]", &daftar.nama);
+    fflush(stdin);
+    printf("Username : "),scanf("%[^\n]", &daftar.username);
+    fflush(stdin);
+    printf("Password : "),scanf("%[^\n]", &daftar.pass);
+    fflush(stdin);
+    printf("Regist Berhasil , Silahkan Login");
+    getchar();
+
+    FILE *out=fopen("akun.dat","a");
+    fprintf(out,"%s#%s#%s#STOP#\n", daftar.username, daftar.pass, daftar.nama);
+    fclose(out);
+    main();
+}
+
+void login(FILE *in, char username[100], char password[100])
+{
+    if(!feof(in))
+    {
+        fscanf(in,"%s", &daftar.username);
+        fflush(stdin);
+        fscanf(in,"%s", &daftar.pass);
+        fflush(stdin);
+        if(strcmp(daftar.username,username)==0 && strcmp(daftar.pass,password)==0)
+        {
+            fscanf(in,"%s", &logina.nama);
+            fflush(stdin);
+            strcpy(logina.status, "Berhasil");
+        }
+        else
+        {
+            fscanf(in,"\n");
+            fflush(stdin);
+            login(in, username, password);
+        }
+    }
+}
+
+void loginuser()
+{
+    data = fopen("save.dat","rb+");
+    system("cls");
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D' RENT");
+    puts("\t\t\t================================");
+    puts("\t\t\t\t Login User\n");
+    printf("Username : ");
+    fflush(stdin);
+    gets(daftar.cari1);
+    printf("Password : ");
+    gets(daftar.cari2);
+
+    FILE *in=fopen("akun.dat","r");
+
+    if(!in)
+    {
+        printf("Member Belum Registrasi");
+    }
+    else
+    {
+        strcpy(logina.status,"Gagal");
+        login(in, daftar.cari1, daftar.cari2);
+        if(strcmp(logina.status, "Berhasil")==0)
+        {
+            printf("Selamat Datang, %s\n", logina.nama);
+            system("pause");
+            system("cls");
+            usermenu ();
+        }
+        else
+        {
+            printf("Login Gagal");
+        }
+    }
+    fclose(in);
+
+    getchar();
+    system("cls");
+    main();
+
+}
+
+void usermenu()
+{
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D'RENT");
+    puts("\t\t\t================================");
+    printf("\t\t\t\t SELAMAT DATANG %s \n",logina.nama);
+    puts("Menu : ");
+    puts("1. Memilih jadwal");
+    puts("2. Cek Jadwal");
+    puts("3. Menambah durasi");
+    puts("4. Melakukan pengembalian secara manual");
+    puts("5. Exit");
+    printf("Pilihan : ");
+    scanf("%d",&luser);
+    switch(luser)
+    {
+    case 1:
+    {
+        jadwal();
+        break;
+    }
+    case 2:
+    {
+        cekjadwal();
+        break;
+    }
+    case 3:
+    {
+        tambah();
+        break;
+    }
+    case 4:
+    {
+        pengembalian();
+        break;
+    }
+    case 5:
+    {
+        main();
+        break;
+    }
+        default :
+            printf ("Error!");
+        }
+    }
+
+bool caripesan(char namse[100])
+{
+    FILE *in = fopen("sewaan.dat","r");
+
+    bool ketemu = false;
+    char merk[100], alamat[100], telp[100], tgl[100], user[100], nama[100];
+
+    if(!in)
+    {
+        return ketemu;
+    }
+    else
+    {
+        while(!feof(in) && !ketemu)
+        {
+            fscanf(in,"%s", &merk);
+            fflush(stdin);
+            fscanf(in,"%s", &alamat);
+            fflush(stdin);
+            fscanf(in,"%s", &telp);
+            fflush(stdin);
+            fscanf(in,"%s", &tgl);
+            fflush(stdin);
+            fscanf(in,"%s", &user);
+            fflush(stdin);
+            fscanf(in,"%s", &nama);
+            fflush(stdin);
+
+            if(strcmp(merk,namse)==0)
+            {
+                ketemu = true;
+            }
+            fscanf(in,"\n");
+            fflush(stdin);
+        }
+    }
+    fclose(in);
+
+    return ketemu;
+}
+void cekjadwal()
+{
+  system("cls");
+    FILE *data;
+    data=fopen("tanggal.dat","rb");
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D' RENT");
+    puts("\t\t\t================================");
+    i=1;
+    while(fread(&daftar,sizeof(daftar),1,data)==1){
+        printf("  %d .Jenis mobil \t: %s\n",i,daftar.merk);
+		printf("   Waktu Sewa\t: %s\n",daftar.wkt);
+		printf("   Tanggal Sewa\t: %s\n",daftar.tang);
+		i++;
+		}
+	fclose(data);system("pause");
+    system("cls");
+    usermenu();
+}
+
+void jadwal()
+{
+    system ("cls");
+    FILE *isi_data;
+    isi_data=fopen("sewaan.dat","a");
+    fflush(stdin);
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D' RENT");
+    puts("\t\t\t================================");
+    printf("\t\t\t\t SELAMAT DATANG %s \n",logina.nama);
+    printf("Masukkan User\t: ");
+    gets(daftar.user);
+    printf("Jenis Kendaraan\t: ");
+    gets(daftar.merk);
+    printf("Alamat\t\t: ");
+    gets(daftar.alamat);
+    printf("No Telp\t\t: ");
+    gets(daftar.telp);
+    printf("Tanggal Sewa: \n");
+    gets(daftar.tgl);
+
+    if(!caripesan(daftar.merk))
+    {
+        fprintf(isi_data,"%s#%s#%s#%s#%s#%s#\n", daftar.merk, daftar.alamat, daftar.telp, daftar.tgl, daftar.user, logina.nama);
+        printf("Berhasil Melakukan Penyewaan\n\n");
+    }
+    else
+    {
+        printf("Gagal Menambahkan Karena sudah tersewa \n\n");
+    }
+
+    fclose(isi_data);
+
+    system("pause");
+    system("cls");
+    usermenu();
+}
+
+
+int caristatus(char nam[100])
+{
+    FILE *in = fopen("status.dat","r");
+
+    char namse[100];
+    bool ketemu = false;
+
+    if(!in)
+    {
+        return 0;
+    }
+    else
+    {
+        while(!feof(in) && !ketemu)
+        {
+            fscanf(in,"%[^#]#", &namse);
+            fflush(stdin);
+            fscanf(in,"%[^#]#", &daftar.status);
+            fflush(stdin);
+
+            if(strcmp(nam,namse)==0)
+            {
+                ketemu = true;
+            }
+            fscanf(in,"\n");
+            fflush(stdin);
+        }
+    }
+    fclose(in);
+
+    if(ketemu)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+void tambah()
+{
+  system("cls");
+    FILE *data;
+    FILE *pesanan;
+    data = fopen("sewaan.dat", "ab+");
+    puts("\t\t\t================================");
+    puts("\t\t\t SELAMAT DATANG DI D' RENT");
+    puts("\t\t\t================================");
+    printf("Banyak Kendaraan  : "); scanf("%d",&n); getchar();
+	for(i=1;i<=n;i++){
+        printf("  %d. Jenis Mobil\t: ",i);gets(daftar.merk);
+		printf("      Waktu Sewa \t: "); gets(daftar.wkt);
+		printf("      Tanggal Sewa\t: "); gets(daftar.tang);
+		fwrite(&daftar, sizeof(daftar), 1, data);
+	}
+	fclose(data);system("pause");
+    system("cls");
+    usermenu();
+}
+
+void pengembalian()
+{
+    system("cls");
+    char HapusP[50],a,str[100],newln[100];
+    FILE *data;
+    FILE *pesanan;
+    data = fopen("sewaan.dat", "rb");
+    pesanan = fopen("sewaan2.dat", "wb");
+
+    printf("\nMasukan Nama Sewa Yang Akan Di Hapus: ");
+    fflush(stdin);
+    gets(HapusP);
+
+    printf("%s",HapusP);
+
+    if(!data)
+    {
+
+    }
+    else
+    {
+        while(!feof(data))
+        {
+            fscanf(data,"%s", &daftar.merk);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.alamat);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.telp);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.tgl);
+            fflush(stdin);
+            fscanf(data,"%s", &daftar.user);
+            fflush(stdin);
+            fscanf(data,"%[s", &daftar.nama);
+            fflush(stdin);
+
+            if(strcmp(HapusP,daftar.merk)==0)
+            {
+
+            }
+            else
+            {
+                fprintf(pesanan,"%s#%s#%s#%s#%s#%s#\n", daftar.merk, daftar.alamat, daftar.telp, daftar.tgl, daftar.user, daftar.nama);
+            }
+
+            fscanf(data,"\n");
+            fflush(stdin);
+        }
+    }
+
+    fclose(data);
+    fclose(pesanan);
+    remove("sewaan.dat");
+    rename("sewaan2.dat","sewaan.dat");
+    printf("Kendaraan Telah Dikembalikan\n");
+    system("pause");
+    system("cls");
+    usermenu();
 }
